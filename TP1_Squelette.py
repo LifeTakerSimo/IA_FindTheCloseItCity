@@ -1,3 +1,7 @@
+from collections import deque
+from curses import start_color
+from platform import node
+import queue
 import tkinter as tk
 from tkinter import ttk
 import csv
@@ -7,8 +11,7 @@ from queue import LifoQueue
 from queue import PriorityQueue
 import math
 import time
-from collections import deque
-
+from tracemalloc import start
 
 
 search_algorithms = ('Parcours en largeur', 'Parcours en profondeur', 'Parcours en profondeur itératif', 'Recherche à coût Uniforme', 'Recherche gloutonne', 'A*')
@@ -18,13 +21,8 @@ town_color = 'lightcoral'
 road_color = 'lightgreen'
 path_color = 'red'
 
-class Node:
-  def __init__(self,town,cost,parent,road_to_parent):
-    self.town =town
-    self.cost=cost
-    self.parent=parent
-    self.road_to_parent=road_to_parent
-        
+
+
 
 class Town:
 
@@ -34,7 +32,13 @@ class Town:
         self.latitude = latitude
         self.longitude = longitude
         self.neighbours = dict()
-
+class Node : # correction
+    def __init__(self,town,cost,parent,road_to_parent):
+        self.town = town
+        self.cost = cost
+        self.parent = parent
+        self.road = road
+        self.road_to_parent = road_to_parent
 
 class Road:
 
@@ -66,14 +70,19 @@ def ucs(start_town, end_town):
 
 # Parcours en profondeur itératif
 def dfs_iter(start_town, end_town):
+    # À remplir !
+    return None
+
+
+# Parcours en profondeur
+def dfs(start_town, end_town):
     initial_state = Node(start_town, 0, None, None)
     if initial_state.town == end_town:
         return initial_state
-    frontier = LIFO()
+    frontier = Queue()
     explored = list()
     frontier.put(initial_state)
-    while not frontier. empty():
-        node = frontier.get()
+    while not frontier.empty():
         explored.append (node.town)
         for neighbour, neighbour_road in node.town.neighbours.items():
             if neighbour not in explored:
@@ -89,17 +98,8 @@ def dfs_iter(start_town, end_town):
                 else:
                     frontier.put(neighbour_node)
     return None
-    return None
-
-
-# Parcours en profondeur
-def dfs(start_town, end_town):
-    # À remplir !
-    return None
 
 # Parcours en largeur
-
-    
 def bfs(start_town, end_town):
     initial_state = Node(start_town, 0, None, None)
     if initial_state.town == end_town:
@@ -124,8 +124,6 @@ def bfs(start_town, end_town):
                 else:
                     frontier.put(neighbour_node)
     return None
-    
-
 
 
 def display_path(path):
@@ -197,8 +195,13 @@ window.title("Itineria")
 
 # Décommenter la carte pour choisir la bonne taille pour votre machine
 #map_image = tk.PhotoImage(file="img/France_map_admin_1066_1024.png")
+#map_image = tk.PhotoImage(file="img/France_map_admin_799_768.png")
+map_image = tk.PhotoImage(file="img/name.gif")
 
-map_image = tk.PhotoImage(file="img/France_map_admin_499_480.png")
+#import os
+#base_folder = os.path.dirname(__file__)
+#image_path = os.path.join(base_folder, 'France_map_admin_799_768.png')
+#photo = tk.PhotoImage(file=image_path)
 
 
 
