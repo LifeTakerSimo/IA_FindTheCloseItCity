@@ -32,13 +32,31 @@ class Town:
         self.latitude = latitude
         self.longitude = longitude
         self.neighbours = dict()
-class Node : # correction
-    def __init__(self,town,cost,parent,road_to_parent):
+class Node: # class node pour le parcours coût uniforme.
+
+    def __init__(self, town, cost, parent, road_to_parent):
         self.town = town
         self.cost = cost
         self.parent = parent
-        self.road = road
         self.road_to_parent = road_to_parent
+
+    def __lt__(self, other):
+        return self.cost < other.cost
+
+    def __le__(self, other):
+        return self.cost <= other.cost
+
+    def __eq__(self, other):
+        return self.cost == other.cost
+
+    def __neq__(self, other):
+        return self.cost != other.cost
+
+    def __gt__(self, other):
+        return self.cost > other.cost
+
+    def __ge__(self, other):
+        return self.cost >= other.cost
 
 class Road:
 
@@ -64,8 +82,33 @@ def greedy_search(start_town, end_town):
     return None
 # Parcours à coût uniforme
 def ucs(start_town, end_town):
-    # À remplir !
-    return None
+    initial_node = Node(start_town, 0, None, None)
+    frontier = PriorityQueue()
+    frontier.put(initial_node)
+    explored = list()
+    while not frontier.empty():
+        node = frontier.get()
+        if node.town == end_town:
+            return node
+        explored.append(node.town)
+        for neighbour, neighbour_road in node.town.neighbours.items():
+            child = Node(neighbour, node.cost + neighbour_road.distance, node, neighbour_road)
+            if child.town not in explored:
+                not_in_frontier = True
+                for frontier_node in frontier.queue:
+                    if frontier_node.town == child.town:
+                        not_in_frontier = False
+                        break
+                if not_in_frontier:
+                    frontier.put(child)
+                elif frontier_node.cost > child.cost:
+                    frontier_node.cost = child.cost
+                    frontier_node.parent = child.parent
+                    frontier_node.road_to_parent = child.road_to_parent
+                    frontier_tmp = PriorityQueue()
+                    while not frontier.empty():
+                        frontier_tmp.put(frontier.get())
+                    frontier = frontier_tmp
 
 # Parcours en profondeur itératif
 def dfs_iter(start_town, end_town):
