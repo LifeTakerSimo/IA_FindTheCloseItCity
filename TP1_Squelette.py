@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 import csv
 import random
-from queue import Queue
+from queue import Empty, Queue
 from queue import LifoQueue
 from queue import PriorityQueue
 import math
@@ -62,7 +62,6 @@ def a_star(start_town, end_town):
 def greedy_search(start_town, end_town):
     # À remplir !
     return None
-
 # Parcours à coût uniforme
 def ucs(start_town, end_town):
     # À remplir !
@@ -76,7 +75,8 @@ def dfs_iter(start_town, end_town):
     frontier = LifoQueue()
     explored = list()
     frontier.put(initial_state)
-    while not frontier.empty():
+    while not frontier. empty():
+        node = frontier.get()
         explored.append (node.town)
         for neighbour, neighbour_road in node.town.neighbours.items():
             if neighbour not in explored:
@@ -93,10 +93,29 @@ def dfs_iter(start_town, end_town):
                     frontier.put(neighbour_node)
     return None
 
-
-# Parcours en profondeur
-def dfs(start_town, end_town):
+# Parcours en profondeur rec 
+def dfs_rec(start_node, end_town, explored):
+    if start_node.town == end_town:
+        return start_node
+    for neighbour, neighbour_road in start_node.town.neighbours.items():
+        if neighbour not in explored.queue:
+            neighbour_node = Node(neighbour, start_node.cost + neighbour_road.distance, start_node, neighbour_road)
+            explored.put(neighbour)
+            dfs_res = dfs_rec(neighbour_node, end_town, explored)
+            if dfs_res is not None:
+                return dfs_res
+            else:
+                explored.get()
     return None
+
+# Parcours en profondeur rec 
+def dfs(start_town, end_town):
+    initial_node = Node(start_town, 0, None, None)
+    explored = LifoQueue()
+    explored.put(start_town)
+    return dfs_rec(initial_node, end_town, explored)
+
+
 
 # Parcours en largeur
 def bfs(start_town, end_town):
