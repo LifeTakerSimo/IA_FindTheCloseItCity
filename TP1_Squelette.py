@@ -70,16 +70,10 @@ def ucs(start_town, end_town):
 
 # Parcours en profondeur itératif
 def dfs_iter(start_town, end_town):
-    # À remplir !
-    return None
-
-
-# Parcours en profondeur
-def dfs(start_town, end_town):
     initial_state = Node(start_town, 0, None, None)
     if initial_state.town == end_town:
         return initial_state
-    frontier = Queue()
+    frontier = LifoQueue()
     explored = list()
     frontier.put(initial_state)
     while not frontier.empty():
@@ -97,6 +91,11 @@ def dfs(start_town, end_town):
                     return neighbour_node
                 else:
                     frontier.put(neighbour_node)
+    return None
+
+
+# Parcours en profondeur
+def dfs(start_town, end_town):
     return None
 
 # Parcours en largeur
